@@ -3,9 +3,9 @@
         <form class="" method="POST" action="{{ route('admin.store') }}" enctype="multipart/form-data">
             @csrf
             <label for="exampleFormControlInput1" class="form-label">Nama Lengkap Admin</label>
-            <input type="text" class="form-control" name="nama" value="{{ old('nama') }}">
-            @if ($errors->has('nama'))
-                <p class="text-danger">{{ $errors->first('nama') }} </p>
+            <input type="text" class="form-control" name="nama_admin" value="{{ old('nama_admin') }}">
+            @if ($errors->has('nama_admin'))
+                <p class="text-danger">{{ $errors->first('nama_admin') }} </p>
             @endif
             <div class="row mt-3">
                 <div class="col">

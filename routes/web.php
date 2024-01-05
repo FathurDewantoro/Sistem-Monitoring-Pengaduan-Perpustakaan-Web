@@ -10,6 +10,10 @@ Route::get('/login', function () {
     return view('login');
 });
 
+Route::get('/', function () {
+    return redirect('/login');
+});
+
 
 Route::post('/cekLogin', [AuthController::class, 'checkLogin']);
 Route::post('/logout', [AuthController::class, 'logout']);
