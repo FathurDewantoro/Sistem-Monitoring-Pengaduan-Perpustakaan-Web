@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -29,7 +30,21 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nama_admin' => 'required',
+            'email' => 'required|email|unique:admin,email',
+            'password' => 'required',
+        ]);
+
+        $admin = new Admin([
+            'nama_admin' => $request->get('nama_admin'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
+
+        $admin->save();
+
+        return redirect('/admin')->with('info', 'Admin berhasil ditambahkan');
     }
 
     /**
@@ -43,24 +58,63 @@ class AdminController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($no_admin)
     {
-        //
+        $admin = Admin::find($no_admin);
+
+        if (!$admin) {
+            return redirect('/admin')->with('info', 'Admin tidak ditemukan');
+        }
+
+        return view('admin.edit_admin', ['admin' => $admin]); // Gantilah 'admin.edit' sesuai dengan nama view Anda
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $no_admin)
     {
-        //
+        $request->validate([
+            'nama_admin' => 'required',
+            'email' => 'required|email|unique:admin,email,' . $no_admin . ',no_admin',
+
+        ]);
+
+        $admin = Admin::find($no_admin);
+
+        if (!$admin) {
+            return redirect('/admin')->with('info', 'Admin tidak ditemukan');
+        }
+
+        if ($request->password == null){
+            $admin->update([
+                'nama_admin' => $request->get('nama_admin'),
+                'email' => $request->get('email'),
+            ]);
+        }else{
+            $admin->update([
+                'nama_admin' => $request->get('nama_admin'),
+                'email' => $request->get('email'),
+                'password' => Hash::make($request->get('password')),
+            ]);
+        }
+
+        return redirect('/admin')->with('info', 'Admin berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $no_admin)
     {
-        //
+        $admin = Admin::find($no_admin);
+
+        if (!$admin) {
+            return redirect('/admin')->with('info', 'Admin tidak ditemukan');
+        }
+
+        $admin->delete();
+
+        return redirect('/admin')->with('info', 'Admin berhasil dihapus');
     }
 }

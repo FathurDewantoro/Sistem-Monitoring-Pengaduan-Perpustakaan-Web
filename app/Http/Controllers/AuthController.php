@@ -21,6 +21,7 @@ class AuthController extends Controller
             return redirect('/login');
         }
         $request->session()->put('login', true);
+        $request->session()->put('nama-admin', $user->nama_admin);
         $request->session()->flash('status', 'Selamat datang admin ' . $user->nama_admin);
         return redirect('/pengaduan');
     }
