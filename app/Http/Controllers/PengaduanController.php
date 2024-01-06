@@ -12,7 +12,7 @@ class PengaduanController extends Controller
      */
     public function index()
     {
-        $pengaduan = Pengaduan::get();
+        $pengaduan = Pengaduan::orderBy('created_at', 'desc')->get();
         return view('pengaduan.pengaduan', compact('pengaduan'));
     }
 
